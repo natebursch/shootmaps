@@ -257,7 +257,7 @@ def build():
     <hr class="rule">
     <p class="lead">MAPSA is dedicated to hosting the highest-quality shooting competitions &mdash; where participants are valued not as numbers, but as respected members of our community.</p>
     <p class="lead">Since our founding, we&rsquo;ve focused on advancing responsible firearm ownership, safety, and education. Our mission is to provide a safe, inclusive, and engaging environment where shooting enthusiasts can learn, compete, and share their passion for the shooting sports.</p>
-    <img class="feature-img" src="/images/photo-3.jpg" alt="MAPSA leadership at a match" loading="lazy">
+    <img class="feature-img" src="/images/photo-2.jpg" alt="MAPSA members with match sponsors Vortex, JP Enterprises and Brass Monkey Bullets" loading="lazy">
   </div>
 </section>
 <section class="alt">
