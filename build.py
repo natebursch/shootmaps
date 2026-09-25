@@ -5,6 +5,7 @@ It regenerates every page (HTML, SEO tags, Google event data, sitemap).
 import os, json, datetime as dt
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DOMAIN = "https://shootmapsa.com"
+VER = dt.datetime.now().strftime("%Y%m%d%H%M")  # cache-buster for css/js
 
 # ------------------------------------------------------------------ SITE DATA
 REGISTER = "https://practiscore.com/clubs/mapsa_at_flsc"
@@ -120,7 +121,7 @@ def page(path, title, desc, body, hero="", extra_head="", image="/images/og-imag
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Kanit:wght@200;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/style.css?v={VER}">
 {extra_head}
 </head>
 <body>
@@ -175,7 +176,7 @@ def page(path, title, desc, body, hero="", extra_head="", image="/images/og-imag
   </div>
 </footer>
 <div class="lightbox"><img alt=""></div>
-{ev}<script src="/js/site.js"></script>
+{ev}<script src="/js/site.js?v={VER}"></script>
 </body>
 </html>
 '''
