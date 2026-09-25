@@ -3,7 +3,7 @@
    ========================================================== */
 const SITE = {
   // Paste your Google Form link here (Form > Send > link icon > copy).
-  signupFormUrl: "https://forms.gle/REPLACE_ME",
+  signupFormUrl: "https://forms.gle/i1g2Vddg6NpA3Acd6",
   registrationUrl: "https://practiscore.com/clubs/mapsa_at_flsc",
   email: "shootmapsa@gmail.com",
   instagram: "https://www.instagram.com/mapsa_mn"

@@ -146,7 +146,7 @@ def page(path, title, desc, body, hero="", extra_head="", image="/images/og-imag
     <h2>Join the Mailing List</h2>
     <hr class="rule">
     <p>Stay informed about our upcoming shoots and events. Fill out our quick sign-up form and we'll keep you in the loop.</p>
-    <a class="btn" data-signup href="#" target="_blank" rel="noopener">Sign Up</a>
+    <a class="btn" data-signup href="https://forms.gle/i1g2Vddg6NpA3Acd6" target="_blank" rel="noopener">Sign Up</a>
   </div>
 </section>
 <footer class="site-footer">
