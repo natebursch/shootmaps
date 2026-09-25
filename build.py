@@ -193,7 +193,9 @@ def redirect(old, new):
         f'<meta http-equiv="refresh" content="0; url={new}"><script>location.replace("{new}"+location.hash)</script></head>'
         f'<body><p>This page moved to <a href="{new}">{DOMAIN}{new}</a>.</p></body></html>\n')
 
-def ph(t, sub=""): return f'<div class="page-hero"><h1>{t}</h1>{f"<p>{sub}</p>" if sub else ""}</div>'
+def ph(t, sub="", img="hero-shooter.jpg", pos="60% 30%"):
+    return (f'<div class="page-hero" style="--hero:url(/images/{img});--pos:{pos}">'
+            f'<h1>{t}</h1>{f"<p>{sub}</p>" if sub else ""}</div>')
 ADDR_Q = f"{ADDRESS['street']}, {ADDRESS['city']}, {ADDRESS['region']} {ADDRESS['zip']}".replace(" ", "+")
 MAP = f'<iframe class="map" src="https://www.google.com/maps?q={ADDR_Q}&amp;output=embed" title="Map to the MAPSA range" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>'
 NEXT = '<div class="next-match" id="next-match" hidden></div>'
@@ -240,7 +242,7 @@ def build():
     <a class="btn btn-outline" href="{IG}" target="_blank" rel="noopener">@mapsa_mn on Instagram</a>
   </div>
 </section>''',
-         hero='<div class="hero"><img src="/images/mapsa-logo.png" alt="Metro Area Practical Shooting Association logo" width="360" height="360"><h1 class="sr-only">MAPSA &ndash; Metro Area Practical Shooting Association</h1><p class="hero-tag">USPSA &amp; PCSL 2-Gun matches &middot; Forest Lake, MN</p></div>',
+         hero='<div class="hero hero-photo"><img src="/images/mapsa-logo.png" alt="Metro Area Practical Shooting Association logo" width="360" height="360"><h1 class="sr-only">MAPSA &ndash; Metro Area Practical Shooting Association</h1><p class="hero-tag"><span class="nw">USPSA &amp; PCSL 2-Gun Matches</span><br><span class="nw">Forest Lake, MN</span></p></div>',
          extra_head=ld(ORG), events_js=True)
 
     cards = "\n".join(
@@ -266,7 +268,7 @@ def build():
 {cards}
     </div>
   </div>
-</section>''', hero=ph("About Us"), extra_head=ld(ORG))
+</section>''', hero=ph("About Us", img="photo-3.jpg", pos="50% 22%"), extra_head=ld(ORG))
 
     page("/schedule/", "2026 Match Schedule | MAPSA USPSA & PCSL 2-Gun, Forest Lake MN",
          "MAPSA's 2026 USPSA and PCSL 2-Gun match schedule in Forest Lake, MN, including the Northwoods Showdown and the MN PCSL 2-Gun Championship. Register on PractiScore.",
@@ -291,7 +293,7 @@ def build():
     {MAP}
     <p class="center"><a class="btn btn-outline" href="https://www.google.com/maps/dir/?api=1&amp;destination={ADDR_Q}" target="_blank" rel="noopener">Get Directions</a></p>
   </div>
-</section>''', hero=ph("Schedule"), extra_head="\n".join(ld(x) for x in event_ld()), events_js=True,
+</section>''', hero=ph("Schedule", img="hero-shooter.jpg", pos="62% 30%"), extra_head="\n".join(ld(x) for x in event_ld()), events_js=True,
          image="/images/event.jpg")
 
     faq_html = "\n".join(f'    <details class="faq"><summary>{q}</summary><div>{a}</div></details>' for q, a in FAQ)
@@ -322,7 +324,7 @@ def build():
 {faq_html}
     <p class="center" style="margin-top:32px">Still have questions? Email <a href="mailto:{EMAIL}">{EMAIL}</a> or DM us on <a href="{IG}" target="_blank" rel="noopener">Instagram</a>.</p>
   </div>
-</section>''', hero=ph("New Shooters", "Everything you need for your first match"), extra_head=ld(faq_ld),
+</section>''', hero=ph("New Shooters", "Everything you need for your first match", img="photo-4.jpg", pos="50% 19%"), extra_head=ld(faq_ld),
          image="/images/photo-1.jpg")
 
     page("/match-rules/", "Match Rules | USPSA & PCSL Rulebooks | MAPSA",
@@ -349,12 +351,14 @@ def build():
       </div>
     </div>
   </div>
-</section>''', hero=ph("Match Rules"))
+</section>''', hero=ph("Match Rules", img="photo-1.jpg", pos="40% 28%"))
 
-    photos = [("photo-1.jpg", "Shooter engaging targets at a USPSA stage"), ("photo-4.jpg", "Competitor running a pistol stage"),
-              ("photo-2.jpg", "MAPSA members with match sponsors"), ("photo-3.jpg", "MAPSA leadership at a match"),
-              ("photo-5.jpg", "MAPSA 2-Gun competitors at the range"), ("pcsl-2gun-2025.jpg", "2025 MN PCSL 2-Gun Championship flyer"),
-              ("event.jpg", "MAPSA 2026 match schedule flyer")]
+    photos = [("photo-4.jpg", "Competitor running a pistol stage at a MAPSA match"),
+              ("photo-1.jpg", "Shooter engaging targets at a USPSA stage"),
+              ("photo-5.jpg", "MAPSA 2-Gun competitors at the range"),
+              ("photo-3.jpg", "MAPSA leadership at a match"),
+              ("photo-2.jpg", "MAPSA members with match sponsors"),
+              ("pcsl-2gun-2025.jpg", "2025 MN PCSL 2-Gun Championship flyer")]
     imgs = "\n".join(f'      <img src="/images/{f}" alt="{a}" loading="lazy">' for f, a in photos)
     page("/photos/", "Photos | MAPSA Practical Shooting Matches",
          "Photos from MAPSA USPSA and PCSL 2-Gun matches and range days in Forest Lake, MN.",
@@ -369,7 +373,7 @@ def build():
     </div>
     <p class="center" style="margin-top:32px"><a class="btn btn-outline" href="{IG}" target="_blank" rel="noopener">More on Instagram</a></p>
   </div>
-</section>''', hero=ph("Photos"), image="/images/photo-2.jpg")
+</section>''', hero=ph("Photos", img="photo-2.jpg", pos="50% 17%"), image="/images/photo-2.jpg")
 
     page("/404.html", "Page Not Found | MAPSA", "This page doesn't exist.",
          '''
@@ -380,7 +384,7 @@ def build():
     <p class="lead">That page doesn&rsquo;t exist (anymore). Try one of these:</p>
     <p><a class="btn" href="/">Home</a> &nbsp; <a class="btn btn-outline" href="/schedule/">Schedule</a></p>
   </div>
-</section>''', hero=ph("404"))
+</section>''', hero=ph("404", img="hero-shooter.jpg", pos="62% 30%"))
 
     # Old WordPress + first-version URLs -> new pages
     for old, new in [("/gallery/", "/photos/"), ("/about.html", "/about-us/"), ("/schedule.html", "/schedule/"),
