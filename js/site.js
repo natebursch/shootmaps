@@ -39,7 +39,6 @@ if (window.MAPSA_EVENTS) {
     .filter(e => asDate(e.end) >= today)
     .sort((a, b) => a.start < b.start ? -1 : a.start > b.start ? 1 : 0);
   const next = all[0];
-  if (next) document.querySelectorAll("[data-sched-year]").forEach(el => el.textContent = next.start.slice(0, 4));
   const box = document.getElementById("next-match");
   if (next && box) {
     const start = asDate(next.start);
