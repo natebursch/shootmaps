@@ -37,6 +37,13 @@ EVENTS = [
 _ps_file = os.path.join(ROOT, "practiscore.json")
 PS = json.load(open(_ps_file, encoding="utf-8")) if os.path.exists(_ps_file) else {"matches": [], "events": []}
 
+# Year shown in "<year> Match Schedule": the year of the next upcoming match/event
+# (site JS also updates it live in the browser).
+_today = dt.date.today().isoformat()
+_upcoming = sorted([m["date"] for m in PS["matches"] + PS["events"]] + [e[1] or e[0] for e in EVENTS])
+SY = next((d_[:4] for d_ in _upcoming if d_ >= _today), str(dt.date.today().year))
+YR = f'<span data-sched-year>{SY}</span>'
+
 LEADERS = [
     ("Tim Dunderi", "President", "https://www.instagram.com/tanfo_timmy"),
     ("Ryan Carlson", "Vice President", None),
@@ -183,7 +190,7 @@ def page(path, title, desc, body, hero="", extra_head="", image="/images/og-imag
         <ul class="link-list">
           <li><a data-register href="{REGISTER}" target="_blank" rel="noopener">Match Registration (PractiScore)</a></li>
           <li><a href="/new-shooters/">New Shooter Guide</a></li>
-          <li><a href="/schedule/">2026 Schedule</a></li>
+          <li><a href="/schedule/">{YR} Schedule</a></li>
           <li><a href="/match-rules/">Match Rules</a></li>
         </ul>
       </div>
@@ -240,7 +247,7 @@ def event_list():
 # ------------------------------------------------------------------ PAGES
 def build():
     page("/", "MAPSA | USPSA & PCSL 2-Gun Matches in Forest Lake, MN",
-         "Metro Area Practical Shooting Association hosts USPSA and PCSL 2-Gun practical shooting matches in Forest Lake, MN for the Twin Cities. See the 2026 schedule and register on PractiScore.",
+         f"Metro Area Practical Shooting Association hosts USPSA and PCSL 2-Gun practical shooting matches in Forest Lake, MN for the Twin Cities. See the {SY} schedule and register on PractiScore.",
          f'''
 <section>
   <div class="wrap">
@@ -301,12 +308,12 @@ def build():
   </div>
 </section>''', hero=ph("About Us", img="photo-3.jpg", pos="50% 22%"), extra_head=ld(ORG))
 
-    page("/schedule/", "2026 Match Schedule | MAPSA USPSA & PCSL 2-Gun, Forest Lake MN",
-         "MAPSA's 2026 USPSA and PCSL 2-Gun match schedule in Forest Lake, MN, including the Northwoods Showdown and the MN PCSL 2-Gun Championship. Register on PractiScore.",
+    page("/schedule/", f"{SY} Match Schedule | MAPSA USPSA & PCSL 2-Gun, Forest Lake MN",
+         f"MAPSA's {SY} USPSA and PCSL 2-Gun match schedule in Forest Lake, MN, including the Northwoods Showdown and the MN PCSL 2-Gun Championship. Register on PractiScore.",
          f'''
 <section>
   <div class="wrap">
-    <h2>2026 Match Schedule</h2>
+    <h2>{YR} Match Schedule</h2>
     <hr class="rule">
     <p class="lead">Registration and match details for every event are on PractiScore &mdash; search keyword <strong>MAPSA</strong>.</p>
     {NEXT}
@@ -342,7 +349,7 @@ def build():
     <hr class="rule">
     <p class="lead">Practical shooting is a timed, moving, run-and-gun style of competition &mdash; and it&rsquo;s the fastest way to get better with the firearms you already own. Here&rsquo;s everything you need to show up to your first MAPSA match with confidence.</p>
     <ol class="steps">
-      <li><h3>Pick a match</h3><p>USPSA matches are pistol only. PCSL 2-Gun uses a pistol and a carbine. Check the <a href="/schedule/">2026 schedule</a>.</p></li>
+      <li><h3>Pick a match</h3><p>USPSA matches are pistol only. PCSL 2-Gun uses a pistol and a carbine. Check the <a href="/schedule/">{YR} schedule</a>.</p></li>
       <li><h3>Register</h3><p>Sign up on <a href="{REGISTER}" target="_blank" rel="noopener">PractiScore</a> (keyword MAPSA) and choose the division that matches your gear.</p></li>
       <li><h3>Gear up</h3><p>Eye &amp; ear protection, a holster that covers the trigger guard, magazines, pouches and ammo.</p></li>
       <li><h3>Show up &amp; shoot</h3><p>Arrive early, check in, and tell your squad it&rsquo;s your first match. They&rsquo;ll help you through it.</p></li>
