@@ -1,0 +1,37 @@
+# Checks MAPSA's PractiScore page every hour. If the upcoming matches changed,
+# it rebuilds the site and pushes, so the "Next Match" banner and schedule page
+# link straight to the new match. Can also be run by hand: Actions tab >
+# "Sync PractiScore" > Run workflow.
+name: Sync PractiScore
+
+on:
+  schedule:
+    - cron: "17 * * * *"   # every hour (free on public repos; only rebuilds when something changed)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Pull matches from PractiScore
+        id: sync
+        run: |
+          if python practiscore_sync.py; then echo "ok=1" >> "$GITHUB_OUTPUT"
+          else echo "::warning::Couldn't read PractiScore today; site left as-is."; fi
+      - name: Rebuild and publish if anything changed
+        if: steps.sync.outputs.ok == '1'
+        run: |
+          if git diff --quiet -- practiscore.json; then echo "No PractiScore changes."; exit 0; fi
+          python build.py
+          git config user.name "mapsa-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Update matches from PractiScore"
+          git push

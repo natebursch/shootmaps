@@ -47,3 +47,21 @@ Don't hand-edit the generated `index.html` files — the next build overwrites t
 - **New match:** in `schedule.html`, copy an `<div class="event">` block. The Google Calendar embed updates itself.
 - **New photos:** drop them in `images/` and copy an `<img>` line in `photos.html`.
 - **Leadership changes:** edit the cards in `about.html`.
+
+## PractiScore auto-sync
+
+`practiscore_sync.py` reads the public MAPSA club page on PractiScore
+(https://practiscore.com/clubs/mapsa_at_flsc) and saves upcoming matches and
+classes to `practiscore.json`. `build.py` uses that file to:
+
+- point the **Next Match** banner straight at that match's PractiScore page
+- list everything under **Upcoming on PractiScore** on the schedule page
+
+The GitHub Action `.github/workflows/practiscore.yml` runs it every hour and
+pushes only when something changed. To run it by hand:
+
+    python practiscore_sync.py
+    python build.py
+
+Nothing needs to be typed in for new matches -- once the club posts a match on
+PractiScore, the site picks it up within the hour.

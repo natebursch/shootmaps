@@ -31,20 +31,32 @@ document.querySelectorAll(".nav a").forEach(a => {
 if (window.MAPSA_EVENTS) {
   const today = new Date(); today.setHours(0, 0, 0, 0);
   const asDate = s => { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); };
-  const next = window.MAPSA_EVENTS.find(e => asDate(e.end) >= today);
+  // Matches pulled from PractiScore (practiscore_sync.py) link straight to that match's
+  // registration page. The hand-typed EVENTS list in build.py is the fallback.
+  const ps = (window.MAPSA_PS || []).map(m => ({ start: m.date, end: m.date, name: m.name, url: m.url, status: m.status }));
+  const psDates = new Set(ps.map(m => m.start));
+  const all = ps.concat(window.MAPSA_EVENTS.filter(e => !psDates.has(e.start)))
+    .filter(e => asDate(e.end) >= today)
+    .sort((a, b) => a.start < b.start ? -1 : a.start > b.start ? 1 : 0);
+  const next = all[0];
   const box = document.getElementById("next-match");
   if (next && box) {
     const start = asDate(next.start);
     const days = Math.round((start - today) / 864e5);
-    const when = start.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" });
+    const when = start.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: start.getFullYear() !== today.getFullYear() ? "numeric" : undefined });
     const count = days <= 0 ? "Today!" : days === 1 ? "Tomorrow" : `in ${days} days`;
+    const status = next.status === "open" ? "Registration open" : next.status ? "Registration not open yet" : "";
+    const btn = next.status && next.status !== "open" ? "View on PractiScore" : "Register";
     box.innerHTML = `<div><span class="label">Next Match</span><span class="name">${next.name}</span>
-      <span class="when">${when} &middot; <span class="count">${count}</span></span></div>
-      <a class="btn" href="${SITE.registrationUrl}" target="_blank" rel="noopener">Register</a>`;
+      <span class="when">${when} &middot; <span class="count">${count}</span></span>
+      ${status ? `<span class="status">${status}</span>` : ""}</div>
+      <a class="btn" href="${next.url || SITE.registrationUrl}" target="_blank" rel="noopener">${btn}</a>`;
     box.hidden = false;
   }
+  document.querySelectorAll(".ps-events .event").forEach(li => { if (asDate(li.dataset.end) < today) li.remove(); });
+  document.querySelectorAll(".ps-wrap").forEach(w => { if (!w.querySelector(".event")) w.remove(); });
   let marked = false;
-  document.querySelectorAll(".events .event").forEach(li => {
+  document.querySelectorAll(".events:not(.ps-events) .event").forEach(li => {
     if (asDate(li.dataset.end) < today) li.classList.add("past");
     else if (!marked) { li.classList.add("next"); marked = true; }
   });

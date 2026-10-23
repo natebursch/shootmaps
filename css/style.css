@@ -96,6 +96,7 @@ section{padding:64px 0}
 .next-match .name{font-family:"Bebas Neue",sans-serif;color:var(--heading);font-size:clamp(1.5rem,3.5vw,2rem);line-height:1.1;display:block}
 .next-match .when{display:block}
 .next-match .count{color:var(--accent);font-weight:400}
+.next-match .status{display:block;font-size:.85rem;text-transform:uppercase;letter-spacing:.08em;opacity:.8;margin-top:2px}
 
 /* Event list */
 .events{list-style:none;padding:0;margin:40px auto 32px;max-width:792px}
@@ -106,6 +107,9 @@ section{padding:64px 0}
 .events .event.past{opacity:.45;border-left-color:#888}
 .events .event.past .tag{color:#bbb;background:rgba(255,255,255,.08)}
 .events .event.next{box-shadow:0 0 0 2px var(--accent)}
+.ps-events .event .btn{grid-column:1/-1;justify-self:start;padding:6px 16px;font-size:.95rem}
+.ps-events .status{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;opacity:.75}
+.ps-wrap h3.sub{text-align:center;margin:40px 0 0}
 
 /* Map */
 .map{width:100%;height:420px;border:0;border-radius:var(--radius);display:block;margin-bottom:24px}

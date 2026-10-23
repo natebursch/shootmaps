@@ -1,0 +1,45 @@
+{
+  "source": "https://practiscore.com/clubs/mapsa_at_flsc",
+  "matches": [
+    {
+      "name": "Northwoods Showdown 2027",
+      "date": "2027-04-30",
+      "url": "https://practiscore.com/northwoods-showdown-2027/register",
+      "status": "closed",
+      "type": "USPSA level I"
+    },
+    {
+      "name": "2027 BELT Defensive Circuit (BDC) REGIONAL 2 - Forest Lake MN",
+      "date": "2027-06-03",
+      "url": "https://practiscore.com/2027-belt-defensive-circuit-bdc-regional-2-forest-lake-mn/register",
+      "status": "closed",
+      "type": "PCSL 1-GUN"
+    }
+  ],
+  "events": [
+    {
+      "name": "Mason Lane Single day \"Gun Skills 101\"",
+      "date": "2027-04-20",
+      "url": "https://practiscore.com/events/mason-lane-single-day-gun-skills-102/participants/create",
+      "status": "open"
+    },
+    {
+      "name": "Mason Lane Single day \"Gun Skills 102\"",
+      "date": "2027-04-21",
+      "url": "https://practiscore.com/events/mason-lane-single-day-gun-skills-102-1/participants/create",
+      "status": "open"
+    },
+    {
+      "name": "Mason Lane two day \"Movement skills\"",
+      "date": "2027-04-22",
+      "url": "https://practiscore.com/events/mason-lane-two-day-movement-skills/participants/create",
+      "status": "open"
+    },
+    {
+      "name": "Mason Lane two day \"Gun Skills 102\"",
+      "date": "2027-04-24",
+      "url": "https://practiscore.com/events/mason-lane-two-day-gun-skills-102/participants/create",
+      "status": "open"
+    }
+  ]
+}

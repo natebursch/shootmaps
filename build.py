@@ -32,6 +32,11 @@ EVENTS = [
     ("2026-10-10", None, "AT3 Tactical MN PCSL 2-Gun Championship, presented by Obsidian Arms", "Championship"),
 ]
 
+# Upcoming matches/events pulled from PractiScore by practiscore_sync.py (runs daily
+# via GitHub Actions). Each one links straight to its own registration page.
+_ps_file = os.path.join(ROOT, "practiscore.json")
+PS = json.load(open(_ps_file, encoding="utf-8")) if os.path.exists(_ps_file) else {"matches": [], "events": []}
+
 LEADERS = [
     ("Tim Dunderi", "President", "https://www.instagram.com/tanfo_timmy"),
     ("Ryan Carlson", "Vice President", None),
@@ -87,6 +92,17 @@ def event_ld():
                     "organizer": {"@type": "Organization", "name": "MAPSA", "url": DOMAIN + "/"},
                     "offers": {"@type": "Offer", "url": REGISTER, "availability": "https://schema.org/InStock", "validFrom": "2026-01-01"},
                     "sport": "Practical shooting"})
+    have = {e[0] for e in EVENTS}
+    for m in PS["matches"]:
+        if m["date"] in have: continue
+        out.append({"@context": "https://schema.org", "@type": "SportsEvent", "name": m["name"],
+                    "startDate": m["date"], "endDate": m["date"], "eventStatus": "https://schema.org/EventScheduled",
+                    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+                    "location": PLACE, "image": [DOMAIN + "/images/og-image.jpg"],
+                    "description": f"{m.get('type') or 'Practical shooting'} match hosted by MAPSA in Forest Lake, MN. Register on PractiScore.",
+                    "organizer": {"@type": "Organization", "name": "MAPSA", "url": DOMAIN + "/"},
+                    "offers": {"@type": "Offer", "url": m["url"], "availability": "https://schema.org/InStock"},
+                    "sport": "Practical shooting"})
     return out
 
 def ld(obj): return f'<script type="application/ld+json">{json.dumps(obj, ensure_ascii=False)}</script>'
@@ -99,7 +115,7 @@ def page(path, title, desc, body, hero="", extra_head="", image="/images/og-imag
     nav = "\n      ".join(f'<a href="{h}">{t}</a>' for h, t in NAV)
     ev = ""
     if events_js:
-        ev = "<script>window.MAPSA_EVENTS=" + json.dumps([{"start": e[0], "end": e[1] or e[0], "name": e[2]} for e in EVENTS]) + ";</script>\n"
+        ev = "<script>window.MAPSA_EVENTS=" + json.dumps([{"start": e[0], "end": e[1] or e[0], "name": e[2]} for e in EVENTS]) + ";window.MAPSA_PS=" + json.dumps(PS["matches"]) + ";</script>\n"
     html = f'''<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -200,6 +216,21 @@ ADDR_Q = f"{ADDRESS['street']}, {ADDRESS['city']}, {ADDRESS['region']} {ADDRESS[
 MAP = f'<iframe class="map" src="https://www.google.com/maps?q={ADDR_Q}&amp;output=embed" title="Map to the MAPSA range" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>'
 NEXT = '<div class="next-match" id="next-match" hidden></div>'
 
+def esc(t): return t.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+
+def ps_list():
+    items = [(m, m.get("type") or "Match") for m in PS["matches"]] + [(e, "Class") for e in PS["events"]]
+    items.sort(key=lambda x: x[0]["date"])
+    if not items: return ""
+    rows = "\n".join(
+        f'      <li class="event" data-end="{m["date"]}"><time datetime="{m["date"]}">{pretty((m["date"], None))}</time>'
+        f'<span class="tag">{esc(tag)}</span><h3>{esc(m["name"])}</h3>'
+        f'<a class="btn" href="{esc(m["url"])}" target="_blank" rel="noopener">'
+        f'{"Register" if m["status"] == "open" else "View on PractiScore"}</a>'
+        f'{"" if m["status"] == "open" else "<span class=status>Registration not open yet</span>"}</li>'
+        for m, tag in items)
+    return f'<div class="ps-wrap"><h3 class="sub">Upcoming on PractiScore</h3>\n    <ol class="events ps-events">\n{rows}\n    </ol></div>'
+
 def event_list():
     rows = "\n".join(
         f'      <li class="event" data-end="{e[1] or e[0]}"><time datetime="{e[0]}">{pretty(e)}</time><span class="tag">{e[3]}</span><h3>{e[2]}</h3></li>'
@@ -280,6 +311,7 @@ def build():
     <p class="lead">Registration and match details for every event are on PractiScore &mdash; search keyword <strong>MAPSA</strong>.</p>
     {NEXT}
     <img class="feature-img" src="/images/event.jpg" alt="MAPSA 2026 match schedule flyer" width="1000" height="1294">
+    {ps_list()}
     <iframe class="cal" src="{CAL}" title="MAPSA events calendar" loading="lazy"></iframe>
     {event_list()}
     <p class="center"><a class="btn" data-register href="{REGISTER}" target="_blank" rel="noopener">Register on PractiScore</a></p>
